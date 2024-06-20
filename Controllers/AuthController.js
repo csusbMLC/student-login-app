@@ -14,14 +14,14 @@ export const signup = async (req, res, next) => {
     }
     const newAdmin = await Admin.create({ username, password });
     const token = createSecretToken(newAdmin._id);
-    res.cookie("token", token, {
-      withCredentials: true,
-      httpOnly: false,
-    });
+    // res.cookie("token", token, {
+    //   httpOnly: false,
+    // });
     res.status(201).json({
       message: "User signed in successfully",
       success: true,
       newAdmin,
+      token,
     });
     next();
   } catch (err) {
@@ -46,10 +46,12 @@ export const login = async (req, res, next) => {
       return res.json({ message: "Incorrect password or username" });
     }
     const token = createSecretToken(admin._id);
-    res.cookie("token", token, { withCredentials: true, httpOnly: false });
+    // console.log(token);
+    // res.cookie("token", token, { httpOnly: false });
+    // res.cookie("cart", "test", { maxAge: 900000, httpOnly: true });
     res
       .status(201)
-      .json({ message: "User logged in successfully", success: true });
+      .json({ message: "User logged in successfully", success: true, token });
     next();
   } catch (err) {
     console.error(err);

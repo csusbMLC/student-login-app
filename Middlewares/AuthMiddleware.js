@@ -6,7 +6,8 @@ import jwt from "jsonwebtoken";
 config();
 
 export const userVerification = (req, res) => {
-  const token = req.cookies.token;
+  const { authorization } = req.headers;
+  const token = authorization.split(" ")[1];
   if (!token) {
     return res.json({ status: false });
   }

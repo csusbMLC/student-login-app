@@ -1,15 +1,15 @@
 /**
- * @file This file contains the main server code for the student login app.
+ * @file Main server code for the student login app.
  */
 
-import express, { json } from "express";
-import { connect } from "mongoose";
+import express from "express";
+import mongoose from "mongoose";
 import cors from "cors";
-import { config } from "dotenv";
+import dotenv from "dotenv";
 import authRouter from "./Routes/AuthRoute.js";
 import apiRouter from "./Routes/apiRoute.js";
 
-config();
+dotenv.config();
 
 const PORT = process.env.PORT || 5000;
 
@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 
 // Middleware
-app.use(json());
+app.use(express.json());
 app.use(cors());
 
 /**
@@ -26,16 +26,19 @@ app.use(cors());
  */
 const connectDB = async () => {
   try {
-    const conn = await connect(process.env.MONGODB_URI);
+    const conn = await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.log(error);
+    console.error(`Error: ${error.message}`);
     process.exit(1);
   }
 };
 
 // Default homepage for testing server status
-app.get("/", async (req, res) => {
+app.get("/", (req, res) => {
   res.status(200).json({ message: "Welcome to the student login API" });
 });
 
@@ -45,9 +48,12 @@ app.use("/api", apiRouter);
 // Auth routes for admin panel access
 app.use("/auth", authRouter);
 
-// Once the database is connected, the server starts listening on the specified port for incoming requests.
-connectDB().then(() => {
+// Start the server after connecting to the database
+const startServer = async () => {
+  await connectDB();
   app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
   });
-});
+};
+
+startServer();

@@ -10,8 +10,8 @@ const MINUTES = 60;
  * @param {string} id - The id to be included in the token payload.
  * @returns {string} - The generated secret token using the provided id, secret key and expiration time.
  */
-export function createSecretToken(id) {
-  return jwt.sign({ id }, process.env.TOKEN_KEY, {
+export function createSecretToken(id, username) {
+  return jwt.sign({ id, username }, process.env.TOKEN_KEY, {
     expiresIn: MINUTES * 60,
   });
 }

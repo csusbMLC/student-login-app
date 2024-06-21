@@ -30,7 +30,7 @@ export const userVerification = (req, res) => {
       return res.json({ status: false });
     } else {
       const admin = await AdminModel.findById(data.id);
-      if (admin) return res.json({ status: true, admin: admin.username });
+      if (admin) return res.json({ status: true, username: admin.username });
       else return res.json({ status: false });
     }
   });

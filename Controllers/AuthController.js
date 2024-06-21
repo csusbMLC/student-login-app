@@ -30,12 +30,12 @@ export const signup = async (req, res, next) => {
       });
     }
     const newAdmin = await Admin.create({ username, password });
-    const token = createSecretToken(newAdmin._id);
+    const token = createSecretToken(newAdmin._id, username);
 
     res.status(201).json({
       message: "User signed in successfully",
       success: true,
-      newAdmin,
+      username,
       token,
     });
     next();
@@ -79,9 +79,12 @@ export const login = async (req, res, next) => {
     }
     const token = createSecretToken(admin._id);
     // console.log(token);
-    res
-      .status(201)
-      .json({ message: "User logged in successfully", success: true, token });
+    res.status(201).json({
+      message: "User logged in successfully",
+      success: true,
+      username,
+      token,
+    });
     next();
   } catch (err) {
     console.error(err);

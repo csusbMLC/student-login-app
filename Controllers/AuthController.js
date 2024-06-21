@@ -2,6 +2,23 @@ import Admin from "../Models/AdminModel.js";
 import { createSecretToken } from "../util/SecretToken.js";
 import bcrypt from "bcryptjs";
 
+/**
+ * Controller function for admin signup.
+ *
+ * This function handles the signup process for an admin user. It checks if a user with the provided username already exists.
+ * If the user exists, it sends a JSON response with a message indicating that the user already exists.
+ * If the user does not exist, it creates a new user with the provided username and password, generates a secret token for the user, and sends a JSON response with a success message, the new user data, and the secret token.
+ *
+ * @function
+ * @async
+ * @param {Object} req - Express request object. The request body should contain the username and password for the new user.
+ * @param {Object} res - Express response object. The function sends a JSON response with the signup status and, if successful, the new user data and the secret token.
+ * @param {Function} next - Express next middleware function.
+ * @returns {void}
+ * @example
+ * // usage
+ * router.post("/signup", signup);
+ */
 export const signup = async (req, res, next) => {
   try {
     const { username, password } = req.body;
@@ -14,9 +31,7 @@ export const signup = async (req, res, next) => {
     }
     const newAdmin = await Admin.create({ username, password });
     const token = createSecretToken(newAdmin._id);
-    // res.cookie("token", token, {
-    //   httpOnly: false,
-    // });
+
     res.status(201).json({
       message: "User signed in successfully",
       success: true,
@@ -29,6 +44,23 @@ export const signup = async (req, res, next) => {
   }
 };
 
+/**
+ * Controller function for admin login.
+ *
+ * This function handles the login process for an admin user. It checks if a user with the provided username exists and if the provided password matches the password of the existing user.
+ * If the user exists and the password is correct, it generates a secret token for the user and sends a JSON response with a success message and the secret token.
+ * If the user does not exist or the password is incorrect, it sends a JSON response with a failure message.
+ *
+ * @function
+ * @async
+ * @param {Object} req - Express request object. The request body should contain the username and password for the user.
+ * @param {Object} res - Express response object. The function sends a JSON response with the login status and, if successful, the secret token.
+ * @param {Function} next - Express next middleware function.
+ * @returns {void}
+ * @example
+ * // usage
+ * router.post("/login", login);
+ */
 export const login = async (req, res, next) => {
   try {
     const { username, password } = req.body;
@@ -47,8 +79,6 @@ export const login = async (req, res, next) => {
     }
     const token = createSecretToken(admin._id);
     // console.log(token);
-    // res.cookie("token", token, { httpOnly: false });
-    // res.cookie("cart", "test", { maxAge: 900000, httpOnly: true });
     res
       .status(201)
       .json({ message: "User logged in successfully", success: true, token });

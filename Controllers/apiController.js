@@ -1,6 +1,14 @@
 import Student from "../Models/StudentModel.js";
 import { timeStamp, elapsedTime } from "../util/time.js";
 
+/**
+ * Retrieves a student by ID and returns the student object.
+ * @function
+ * @async
+ * @param {Object} req - Express request object. The request query should contain the studentId.
+ * @param {Object} res - Express response object. The function sends a JSON response with the student data.
+ * @returns {void}
+ */
 export const getStudent = async (req, res) => {
   console.log(req.query);
   try {
@@ -12,6 +20,14 @@ export const getStudent = async (req, res) => {
   }
 };
 
+/**
+ * Handles student login by updating lastLogin, lastClass, and adding a new loginTimestamp.
+ * @function
+ * @async
+ * @param {Object} req - Express request object. The request body should contain the studentId and className.
+ * @param {Object} res - Express response object. The function sends a JSON response with the updated student data.
+ * @returns {void}
+ */
 export const loginStudent = async (req, res) => {
   const { studentId, className } = req.body;
   try {
@@ -50,6 +66,14 @@ export const loginStudent = async (req, res) => {
   }
 };
 
+/**
+ * Handles student logout by updating lastLogout, calculating total time, and updating loginTimestamps.
+ * @function
+ * @async
+ * @param {Object} req - Express request object. The request body should contain the studentId.
+ * @param {Object} res - Express response object. The function sends a JSON response with the updated student data.
+ * @returns {void}
+ */
 export const logoutStudent = async (req, res) => {
   const { studentId } = req.body;
   try {
@@ -88,6 +112,14 @@ export const logoutStudent = async (req, res) => {
   }
 };
 
+/**
+ * Retrieves all students and returns an array of student objects.
+ * @function
+ * @async
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object. The function sends a JSON response with an array of student data.
+ * @returns {void}
+ */
 export const getStudents = async (req, res) => {
   let students = null;
   try {
@@ -98,6 +130,14 @@ export const getStudents = async (req, res) => {
   }
 };
 
+/**
+ * Creates a new student.
+ * @function
+ * @async
+ * @param {Object} req - Express request object. The request body should contain the studentName, studentId, and classes.
+ * @param {Object} res - Express response object. The function sends a JSON response with the created student data.
+ * @returns {void}
+ */
 export const createStudent = async (req, res) => {
   const { studentName, studentId, classes } = req.body;
   console.log(studentName, studentId, classes);
@@ -126,6 +166,14 @@ export const createStudent = async (req, res) => {
   }
 };
 
+/**
+ * Deletes a student by ID.
+ * @function
+ * @async
+ * @param {Object} req - Express request object. The request params should contain the studentId.
+ * @param {Object} res - Express response object. The function sends a JSON response with the status of the operation.
+ * @returns {void}
+ */
 export const deleteStudent = async (req, res) => {
   const { studentId } = req.params;
   console.log(studentId);
@@ -143,6 +191,14 @@ export const deleteStudent = async (req, res) => {
   }
 };
 
+/**
+ * Updates a student by ID.
+ * @function
+ * @async
+ * @param {Object} req - Express request object. The request params should contain the studentId and the request body should contain the updated student data.
+ * @param {Object} res - Express response object. The function sends a JSON response with the updated student data.
+ * @returns {void}
+ */
 export const updateStudent = async (req, res) => {
   const { studentId } = req.params;
   const {

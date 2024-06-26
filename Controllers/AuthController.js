@@ -26,6 +26,7 @@ export const signup = async (req, res, next) => {
     const existingAdmin = await Admin.findOne({ username });
     if (existingAdmin) {
       return res.json({
+        success: false,
         message: `user with username ${username} already exists`,
       });
     }
@@ -66,16 +67,23 @@ export const login = async (req, res, next) => {
     const { username, password } = req.body;
     if (!username || !password) {
       return res.json({
+        success: false,
         message: "Missing required fields username and/or password",
       });
     }
     const admin = await Admin.findOne({ username });
     if (!admin) {
-      return res.json({ message: "Incorrect password or username" });
+      return res.json({
+        success: false,
+        message: "Incorrect password or username",
+      });
     }
     const auth = await bcrypt.compare(password, admin.password);
     if (!auth) {
-      return res.json({ message: "Incorrect password or username" });
+      return res.json({
+        success: false,
+        message: "Incorrect password or username",
+      });
     }
     const token = createSecretToken(admin._id);
     // console.log(token);

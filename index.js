@@ -39,7 +39,9 @@ const connectDB = async () => {
 
 // Default homepage for testing server status
 app.get("/", (req, res) => {
-  res.status(200).json({ message: "Welcome to the student login API" });
+  res
+    .status(200)
+    .json({ success: true, message: "Welcome to the student login API" });
 });
 
 // API routes for the app

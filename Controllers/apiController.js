@@ -13,12 +13,14 @@ export const getStudent = async (req, res) => {
   try {
     const student = await Student.findOne({ studentId: req.query.studentId });
     if (!student) {
-      return res.status(404).json({ message: "Student not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Student not found" });
     }
-    res.status(200).json(student);
+    res.status(200).json({ success: true, student });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
@@ -52,13 +54,15 @@ export const loginStudent = async (req, res) => {
     );
 
     if (!updatedStudent) {
-      return res.status(404).json({ message: "Student not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Student not found" });
     }
 
-    res.status(200).json(updatedStudent);
+    res.status(200).json({ success: true, updatedStudent });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
@@ -75,14 +79,18 @@ export const logoutStudent = async (req, res) => {
   try {
     const student = await Student.findOne({ studentId });
     if (!student) {
-      return res.status(404).json({ message: "Student not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Student not found" });
     }
 
     const index = student.loginTimestamps.findIndex(
       (timestamp) => timestamp.loginTime === student.lastLogin
     );
     if (index === -1) {
-      return res.status(404).json({ message: "Login session not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Login session not found" });
     }
 
     const logoutTime = timeStamp();
@@ -97,10 +105,10 @@ export const logoutStudent = async (req, res) => {
 
     await student.save();
 
-    res.status(200).json(student);
+    res.status(200).json({ success: true, student });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
@@ -115,10 +123,10 @@ export const logoutStudent = async (req, res) => {
 export const getStudents = async (req, res) => {
   try {
     const students = await Student.find({});
-    res.status(200).json(students);
+    res.status(200).json({ success: true, students });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
@@ -135,14 +143,16 @@ export const createStudent = async (req, res) => {
   try {
     const existingStudent = await Student.findOne({ studentId });
     if (existingStudent) {
-      return res.status(409).json({ message: "Student already exists" });
+      return res
+        .status(409)
+        .json({ success: false, message: "Student already exists" });
     }
 
     const student = await Student.create({ studentName, studentId, classes });
-    res.status(201).json(student);
+    res.status(201).json({ success: true, student });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
@@ -159,12 +169,16 @@ export const deleteStudent = async (req, res) => {
   try {
     const deleted = await Student.findOneAndDelete({ studentId });
     if (!deleted) {
-      return res.status(404).json({ message: "Student not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Student not found" });
     }
-    res.status(200).json({ message: "Student deleted", deleted });
+    res
+      .status(200)
+      .json({ success: true, message: "Student deleted", deleted });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
@@ -202,12 +216,14 @@ export const updateStudent = async (req, res) => {
     );
 
     if (!updated) {
-      return res.status(404).json({ message: "Student not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Student not found" });
     }
 
-    res.status(200).json(updated);
+    res.status(200).json({ success: true, updated });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };

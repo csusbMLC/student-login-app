@@ -1,4 +1,8 @@
-import { login, signup } from "../Controllers/AuthController.js";
+import {
+  changePassword,
+  login,
+  signup,
+} from "../Controllers/AuthController.js";
 import { Router } from "express";
 import { userVerification } from "../Middlewares/AuthMiddleware.js";
 
@@ -39,5 +43,15 @@ router.post("/signup", signup);
  * @param {Object} res - Express response object
  */
 router.post("/login", login);
+
+/**
+ * Route for changing user password.
+ * @name POST /changePassword
+ * @function
+ * @memberof module:AuthRoute
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
+router.post("/changePassword", changePassword);
 
 export default router;

@@ -13,13 +13,12 @@ import bcrypt from "bcryptjs";
  * @async
  * @param {Object} req - Express request object. The request body should contain the username and password for the new user.
  * @param {Object} res - Express response object. The function sends a JSON response with the signup status and, if successful, the new user data and the secret token.
- * @param {Function} next - Express next middleware function.
  * @returns {void}
  * @example
  * // usage
  * router.post("/signup", signup);
  */
-export const signup = async (req, res, next) => {
+export const signup = async (req, res) => {
   try {
     const { username, password } = req.body;
 
@@ -39,9 +38,9 @@ export const signup = async (req, res, next) => {
       username,
       token,
     });
-    next();
   } catch (err) {
     console.error(err);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
@@ -56,13 +55,12 @@ export const signup = async (req, res, next) => {
  * @async
  * @param {Object} req - Express request object. The request body should contain the username and password for the user.
  * @param {Object} res - Express response object. The function sends a JSON response with the login status and, if successful, the secret token.
- * @param {Function} next - Express next middleware function.
  * @returns {void}
  * @example
  * // usage
  * router.post("/login", login);
  */
-export const login = async (req, res, next) => {
+export const login = async (req, res) => {
   try {
     const { username, password } = req.body;
     if (!username || !password) {
@@ -93,8 +91,60 @@ export const login = async (req, res, next) => {
       username,
       token,
     });
-    next();
   } catch (err) {
     console.error(err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+/**
+ * Controller function for changing the password of an admin user.
+ *
+ * This function handles the password change process for an admin user. It checks if a user with the provided username exists and if the provided password matches the password of the existing user.
+ * If the user exists and the password is correct, it changes the password to the new password provided and sends a JSON response with a success message.
+ * If the user does not exist or the password is incorrect, it sends a JSON response with a failure message.\
+ *
+ * @function
+ * @async
+ * @param {Object} req - Express request object. The request body should contain the username, password, and newPassword for the user.
+ * @param {Object} res - Express response object. The function sends a JSON response with the password change status.
+ * @returns {void}
+ * @example
+ * // usage
+ * router.post("/changePassword", changePassword);
+ */
+export const changePassword = async (req, res) => {
+  try {
+    const { username, password, newPassword } = req.body;
+    if (!username || !password || !newPassword) {
+      return res.json({
+        success: false,
+        message: "Missing required fields username and/or password",
+      });
+    }
+    const admin = await Admin.findOne({ username });
+    if (!admin) {
+      return res.json({
+        success: false,
+        message: "Incorrect password or username",
+      });
+    }
+    const auth = await bcrypt.compare(password, admin.password);
+    if (!auth) {
+      return res.json({
+        success: false,
+        message: "Incorrect password or username",
+      });
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await Admin.findOneAndUpdate({ username }, { password: hashedPassword });
+    res.status(201).json({
+      message: "Password changed successfully",
+      success: true,
+      username,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };

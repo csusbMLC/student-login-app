@@ -25,7 +25,7 @@ export const getStudent = async (req, res) => {
 };
 
 /**
- * Handles student login by updating lastLogin, lastClass, and adding a new loginTimestamp.
+ * Handles student login by updating lastLogin, lastLogin, lastClass, and adding a new loginTimestamp.
  * @function
  * @async
  * @param {Object} req - Express request object. The request body should contain the studentId and className.
@@ -40,6 +40,7 @@ export const loginStudent = async (req, res) => {
       { studentId },
       {
         lastLogin: loginTime,
+        lastLogout: loginTime,
         lastClass: className,
         $push: {
           loginTimestamps: {
@@ -193,12 +194,9 @@ export const deleteStudent = async (req, res) => {
 export const updateStudent = async (req, res) => {
   const { studentId } = req.params;
   const {
-    studentName,
-    classes,
-    lastLogin,
-    lastLogout,
-    lastClass,
-    loginTimestamps,
+    studentName = "First Last",
+    classes = [],
+    loginTimestamps = [],
   } = req.body;
 
   try {
@@ -207,9 +205,15 @@ export const updateStudent = async (req, res) => {
       {
         studentName,
         classes,
-        lastLogin,
-        lastLogout,
-        lastClass,
+        lastLogin: loginTimestamps.length
+          ? loginTimestamps[loginTimestamps.length - 1].loginTime
+          : 0,
+        lastLogout: loginTimestamps.length
+          ? loginTimestamps[loginTimestamps.length - 1].logoutTime
+          : 0,
+        lastClass: loginTimestamps.length
+          ? loginTimestamps[loginTimestamps.length - 1].className
+          : "",
         loginTimestamps,
       },
       { new: true }

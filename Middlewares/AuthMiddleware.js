@@ -35,3 +35,23 @@ export const userVerification = (req, res) => {
     }
   });
 };
+
+export const authorize = (req, res, next) => {
+  console.log("authorize called");
+  const { authorization } = req.headers;
+  const token = authorization.split(" ")[1];
+  if (!token) {
+    return res.json({ status: false });
+  }
+  jwt.verify(token, process.env.TOKEN_KEY, async (err, data) => {
+    if (err) {
+      return res.json({ status: false });
+    } else {
+      const admin = await AdminModel.findById(data.id);
+      if (admin) {
+        console.log("authorized admin, calling next");
+        next();
+      } else return res.json({ status: false });
+    }
+  });
+};

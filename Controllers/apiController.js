@@ -149,7 +149,15 @@ export const createStudent = async (req, res) => {
         .json({ success: false, message: "Student already exists" });
     }
 
-    const student = await Student.create({ studentName, studentId, classes });
+    const student = await Student.create({
+      studentName,
+      studentId,
+      classes,
+      loginTimestamps: [],
+      lastLogin: 0,
+      lastLogout: 0,
+      lastClass: "",
+    });
     res.status(201).json({ success: true, student });
   } catch (error) {
     console.error(error.message);

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createStudent,
+  deleteAllStudents,
   deleteStudent,
   getStudent,
   getStudents,
@@ -8,6 +9,7 @@ import {
   logoutStudent,
   updateStudent,
 } from "../Controllers/apiController.js";
+import { authorize } from "../Middlewares/AuthMiddleware.js";
 
 const router = Router();
 
@@ -53,5 +55,11 @@ router.delete("/students/:studentId", deleteStudent);
  * @route PUT /students/:studentId
  */
 router.put("/students/:studentId", updateStudent);
+
+/**
+ * Deletes all students.
+ * @route DELETE /students
+ */
+router.delete("/students", authorize, deleteAllStudents);
 
 export default router;

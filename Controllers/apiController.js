@@ -231,3 +231,14 @@ export const updateStudent = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
+export const deleteAllStudents = async (req, res) => {
+  console.log("deleteAllStudents called");
+  try {
+    await Student.deleteMany({});
+    res.status(200).json({ success: true, message: "All students deleted" });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};

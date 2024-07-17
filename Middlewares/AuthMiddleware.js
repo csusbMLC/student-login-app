@@ -41,7 +41,7 @@ export const authorize = (req, res, next) => {
   const { authorization } = req.headers;
   const token = authorization.split(" ")[1];
   if (!token) {
-    return res.json({ status: false });
+    return res.json({ status: false, message: "Unauthorized" });
   }
   jwt.verify(token, process.env.TOKEN_KEY, async (err, data) => {
     if (err) {
@@ -51,7 +51,7 @@ export const authorize = (req, res, next) => {
       if (admin) {
         console.log("authorized admin, calling next");
         next();
-      } else return res.json({ status: false });
+      } else return res.json({ status: false, message: "Unauthorized" });
     }
   });
 };
